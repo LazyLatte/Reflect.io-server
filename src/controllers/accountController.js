@@ -10,7 +10,8 @@ const handleCheckExistence = async (req, res) => {
     const user = await getAccount(name);
     user ? res.send(true) : res.send(false);
 }
-const accessMinutes = 1;
+//const accessMinutes = 1;
+const refreshDay = 7;
 const saltRound = 10;
 const handleRegister = async (req, res) => {
     const {name, password} = req.body;
@@ -21,11 +22,11 @@ const handleRegister = async (req, res) => {
     try{
         const hashedPassword = await bcrypt.hash(password, saltRound);
         const newUser = await createAccount(name, hashedPassword);
-        console.log(newUser);
-        const accessToken = jwt.sign({name}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '30s'});
-        const refreshToken = jwt.sign({name}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '10m'}); 
+        //console.log(newUser);
+        const accessToken = jwt.sign({name}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '2h'});
+        const refreshToken = jwt.sign({name}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '7d'}); 
 
-        res.cookie('jwt', refreshToken, {httpOnly: true,  sameSite: 'none', secure: true, maxAge: accessMinutes * 60 * 1000});
+        res.cookie('jwt', refreshToken, {httpOnly: true,  sameSite: 'none', secure: true, maxAge: refreshDay * 24 * 60 * 60 * 1000});
         res.json({name, accessToken});
     }catch(err){
         res.status(500).json({message: err.message});
@@ -40,10 +41,10 @@ const handleSignIn = async (req, res) => {
     // evaluating pwd
     const match = await bcrypt.compare(password, user.password);
     if(match){
-        const accessToken = jwt.sign({name}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '30s'});
-        const refreshToken = jwt.sign({name}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '10m'}); 
+        const accessToken = jwt.sign({name}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '2h'});
+        const refreshToken = jwt.sign({name}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '7d'}); 
         
-        res.cookie('jwt', refreshToken, {httpOnly: true,  sameSite: 'none', secure: true, maxAge: accessMinutes * 60 * 1000});
+        res.cookie('jwt', refreshToken, {httpOnly: true,  sameSite: 'none', secure: true, maxAge: refreshDay * 24 * 60 * 60 * 1000});
         res.json({name, accessToken});
     }else{
         res.sendStatus(401);
@@ -53,7 +54,7 @@ const handleSignOut = async (req, res) => {
     const cookies = req.cookies;
     if(!cookies?.jwt) return res.sendStatus(401); // expired
     const refreshToken = cookies.jwt;
-    console.log(refreshToken)
+    //console.log(refreshToken)
     jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
