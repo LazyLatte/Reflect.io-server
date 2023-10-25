@@ -1,7 +1,7 @@
-require('../../config.js');
+const config = require('../../config.js');
 if (!global.db) {
     const pgp = require('pg-promise')();
-    db = pgp(process.env.DB_URL);
+    db = pgp(config.cn);
 }
 
 const getUserLevels = (name) => {
