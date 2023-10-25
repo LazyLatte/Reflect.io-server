@@ -86,10 +86,11 @@ const dataSql = `
 db.none(schemaSql).then(() => {
 
     console.log('Schema created');
-    db.none(dataSql).then(() => {
-        console.log('Data populated');
-        pgp.end();
-    });
+    pgp.end();
+    // db.none('').then(() => {
+    //     console.log('Data populated');
+    //     pgp.end();
+    // });
 }).catch(err => {
     console.log('Error creating schema', err);
 });
