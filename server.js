@@ -39,7 +39,7 @@ app.use('/api/refresh', refreshRouter);
 app.use('/api/account', accountRouter);
 app.use('/api/play', playRouter);
 app.use('/api/levels', levelRouter);
-const port = 3000;
+const port = 443;
 app.listen(port, () => {
     console.log(`Server is up and running on port ${port}...`);
 });
