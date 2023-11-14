@@ -26,7 +26,7 @@ const handleRegister = async (req, res) => {
         const accessToken = jwt.sign({name}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '2h'});
         const refreshToken = jwt.sign({name}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '7d'}); 
 
-        res.cookie('jwt', refreshToken, {httpOnly: true,  sameSite: 'none', secure: true, maxAge: refreshDay * 24 * 60 * 60 * 1000});
+        res.cookie('jwt', refreshToken, {httpOnly: true,  sameSite: 'strict', secure: false, maxAge: refreshDay * 24 * 60 * 60 * 1000});
         res.json({name, accessToken});
     }catch(err){
         res.status(500).json({message: err.message});
@@ -44,7 +44,7 @@ const handleSignIn = async (req, res) => {
         const accessToken = jwt.sign({name}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '2h'});
         const refreshToken = jwt.sign({name}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '7d'}); 
         
-        res.cookie('jwt', refreshToken, {httpOnly: true,  sameSite: 'none', secure: true, maxAge: refreshDay * 24 * 60 * 60 * 1000});
+        res.cookie('jwt', refreshToken, {httpOnly: true,  sameSite: 'strict', secure: false, maxAge: refreshDay * 24 * 60 * 60 * 1000});
         res.json({name, accessToken});
     }else{
         res.sendStatus(401);
@@ -60,7 +60,7 @@ const handleSignOut = async (req, res) => {
         process.env.REFRESH_TOKEN_SECRET,
         (err, decode) => {
             if(err) return res.sendStatus(403); // token not exist
-            res.cookie('jwt', '', {httpOnly: true,  sameSite: 'none', secure: true, maxAge: 1});
+            res.cookie('jwt', '', {httpOnly: true,  sameSite: 'strict', secure: false, maxAge: 1});
             res.sendStatus(200);
         }
     );
