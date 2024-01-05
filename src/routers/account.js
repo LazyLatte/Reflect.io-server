@@ -8,7 +8,7 @@ const {
     // handleChangePassword,
     // handleDeleteAccount
 } = require('../controllers/accountController');
-const verifyPassword = require('../middleware/verifyPassword');
+//const verifyPassword = require('../middleware/verifyPassword');
 const router = express.Router();
 router.get('/', handleCheckExistence);
 router.post('/register', handleRegister);

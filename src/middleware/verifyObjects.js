@@ -4,7 +4,7 @@ const verifyDegree = (deg) => Number.isInteger(deg / 45);
 const verifyColor = (color) => color === 1 || color === 2 || color === 3 || color === 4 || color === 5 || color === 6 || color === 7;
 const verifyLaser = (laser, gridHeight, gridWidth) => laser && Object.keys(laser).length === 3 && verifyPos(laser.pos, gridHeight, gridWidth) && verifyDir(laser.dir) && verifyColor(laser.color);
 const verifyTarget = (target, gridHeight, gridWidth) => target && Object.keys(target).length === 2 && verifyPos(target.pos, gridHeight, gridWidth) && verifyColor(target.color);
-const verifyMirror = (mirror, gridHeight, gridWidth) => mirror && Object.keys(mirror).length === 2 && verifyPos(mirror.pos, gridHeight, gridWidth) && verifyDegree(mirror.deg);
+const verifyMirror = (mirror, gridHeight, gridWidth) => mirror && Object.keys(mirror).length === 3 && verifyPos(mirror.pos, gridHeight, gridWidth) && verifyDegree(mirror.deg) && verifyColor(mirror.color);
 
 const verifyArrayOfObjects = (arr, gridHeight, gridWidth, verifyFunc) => {
     return arr.map(e => verifyFunc(e, gridHeight, gridWidth)).reduce(

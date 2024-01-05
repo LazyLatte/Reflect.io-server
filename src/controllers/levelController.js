@@ -8,7 +8,6 @@ const handleListUserLevels = async (req, res) => {
 
 const handleCreateLevel = async (req, res) => {
     const {name, height, width, thumbnail} = req.body;
-    //validate height and width
     const newlevel = await createLevel(name, height, width, thumbnail);
     res.json(newlevel);
 }

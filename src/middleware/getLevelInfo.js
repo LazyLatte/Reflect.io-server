@@ -1,4 +1,4 @@
-const {getLevelByID} = require('../model/level');
+const {getLevelByID} = require('../model/play');
 
 const getLevelInfo = async (req, res, next) => {
     const {id} = req.params;

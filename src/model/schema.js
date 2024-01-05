@@ -17,22 +17,24 @@ const schemaSql = `
     DROP TYPE IF EXISTS target;
     DROP TYPE IF EXISTS laser;
     DROP TYPE IF EXISTS vector2d;
-
+    DROP TYPE IF EXISTS rgb;
 
 
     -- Create
+    CREATE DOMAIN rgb AS integer CHECK (VALUE <@ int4range(0, 8));
     CREATE TYPE vector2d AS (
         x   int,
         y   int
     );
+    
     CREATE TYPE laser AS (
         pos     vector2d,
         dir     vector2d,
-        color   int
+        color   rgb
     );
     CREATE TYPE target AS (
         pos     vector2d,
-        color   int
+        color   rgb
     );
 
 
@@ -49,8 +51,8 @@ const schemaSql = `
         width               int NOT NULL DEFAULT 10,
         lasers              laser[] NOT NULL DEFAULT array[]::laser[],
         targets             target[] NOT NULL DEFAULT array[]::target[],
-        "reflectorNum"      int NOT NULL DEFAULT 0,
-        "lensNum"           int NOT NULL DEFAULT 0,
+        reflectors          rgb[] NOT NULL DEFAULT array[]::rgb[],
+        lenses              rgb[] NOT NULL DEFAULT array[]::rgb[],
         public              boolean NOT NULL DEFAULT false,
         clears              int NOT NULL DEFAULT 0,
         likes               int NOT NULL DEFAULT 0,
@@ -76,18 +78,18 @@ const schemaSql = `
 
 const dataSql = `
     -- Populate dummy player
-    -- INSERT INTO player (id, name, password) VALUES (uuid_generate_v4(), 'guest', '1234');
+    INSERT INTO player (id, name, password) VALUES (uuid_generate_v4(), 'guest', '1234');
     -- Populate dummy level
-    -- INSERT INTO level (id, height, width, lasers, targets, "reflectorNum", "lensNum", creator)
-    -- SELECT uuid_generate_v4(), 10, 10, array[((3, 3), (1, 0), 2)]::laser[], array[((5, 6), 2), ((7, 3), 2)]::target[], 1, 1, 'guest' 
-    -- From generate_series(1, 100) AS s(i);
+    INSERT INTO level (id, height, width, lasers, targets, reflectors, lenses, creator)
+    SELECT uuid_generate_v4(), 10, 10, array[((3, 3), (1, 0), 2)]::laser[], array[((5, 6), 2), ((7, 3), 2)]::target[], array[7], array[7, 7], 'guest' 
+    From generate_series(1, 1) AS s(i);
 `;
 
 db.none(schemaSql).then(() => {
 
     console.log('Schema created');
     pgp.end();
-    // db.none('').then(() => {
+    // db.none(dataSql).then(() => {
     //     console.log('Data populated');
     //     pgp.end();
     // });
