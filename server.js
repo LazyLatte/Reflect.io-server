@@ -1,6 +1,8 @@
-const path = require('path')
+const fs = require('fs');
+const path = require('path');
+const https = require('https');
 const express = require('express');
-const cors = require('cors');
+//const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
@@ -40,7 +42,12 @@ app.use('/api/refresh', refreshRouter);
 app.use('/api/account', accountRouter);
 app.use('/api/play', playRouter);
 app.use('/api/levels', levelRouter);
-const port = 3000;
-app.listen(port, () => {
+const port = 443;
+const options = {
+    key: fs.readFileSync(process.env.SSL_KEY),
+    cert: fs.readFileSync(process.env.SSL_CERT),
+    ca: fs.readFileSync(process.env.SSL_CA)
+};
+https.createServer(options, app).listen(port, () => {
     console.log(`Server is up and running on port ${port}...`);
 });
